@@ -57,6 +57,38 @@ pip install --no-build-isolation -e .
 pip install torchcodec==0.1
 ```
 
+### **bug:**
+``` bash
+libGL error: MESA-LOADER: failed to open swrast: /home/ubuntu/anaconda3/envs/mast3r-slam/bin/../lib/libstdc++.so.6: version `GLIBCXX_3.4.30' not found (required by /lib/x86_64-linux-gnu/libLLVM-15.so.1) (search paths /usr/lib/x86_64-linux-gnu/dri:\$${ORIGIN}/dri:/usr/lib/dri, suffix _dri)
+libGL error: failed to load driver: swrast
+/home/ubuntu/anaconda3/envs/mast3r-slam/lib/python3.11/site-packages/glfw/__init__.py:917: GLFWError: (65543) b'GLX: Failed to create context: GLXBadFBConfig'
+  warnings.warn(message, GLFWError)
+Process Process-2:
+Traceback (most recent call last):
+  File "/home/ubuntu/anaconda3/envs/mast3r-slam/lib/python3.11/multiprocessing/process.py", line 314, in _bootstrap
+    self.run()
+  File "/home/ubuntu/anaconda3/envs/mast3r-slam/lib/python3.11/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/workspace/codes/08/MASt3R-SLAM/mast3r_slam/visualization.py", line 390, in run_visualization
+    window = window_cls(
+             ^^^^^^^^^^^
+  File "/home/ubuntu/anaconda3/envs/mast3r-slam/lib/python3.11/site-packages/moderngl_window/context/glfw/window.py", line 60, in __init__
+    raise ValueError("Failed to create window")
+```
+
+**solve:**
+``` bash
+# install a newer GCC runtime
+conda install -c conda-forge "libgcc-ng>=12.0.0" "libstdcxx-ng>=12.0.0"
+```
+After that, verify:
+``` bash
+strings $CONDA_PREFIX/lib/libstdc++.so.6 | grep GLIBCXX_3.4.30
+```
+If you see GLIBCXX_3.4.30, you’re good. Now rerun your script
+
+
+## model
 Setup the checkpoints for MASt3R and retrieval.  The license for the checkpoints and more information on the datasets used is written [here](https://github.com/naver/mast3r/blob/mast3r_sfm/CHECKPOINTS_NOTICE).
 ```
 mkdir -p checkpoints/
